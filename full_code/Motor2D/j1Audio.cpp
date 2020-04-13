@@ -140,6 +140,23 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
+void j1Audio::PauseMusic()
+{
+	if (active)
+	{
+		if (Mix_PlayingMusic() == 1)	// Sees if there is music playing
+		{
+			if (Mix_PausedMusic() == 1)	// If the music is already paused resume it
+			{
+				Mix_ResumeMusic();
+			}
+			else
+			{
+				Mix_PauseMusic();
+			}
+		}
+	}
+}
  //Load WAV
 unsigned int j1Audio::LoadFx(const char* path, FxPack pack) // Loads the audio on the standar Mix_Chunk* or on a self-made one
 {

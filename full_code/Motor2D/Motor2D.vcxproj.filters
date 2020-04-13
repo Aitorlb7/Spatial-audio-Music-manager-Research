@@ -31,9 +31,6 @@
     <ClCompile Include="j1Window.cpp">
       <Filter>Desenvolupament  ========\Modules\Core</Filter>
     </ClCompile>
-    <ClCompile Include="j2EntityManager.cpp">
-      <Filter>Desenvolupament  ========\Modules\Entity management</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
     </ClCompile>
@@ -42,6 +39,15 @@
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Entities.cpp">
+      <Filter>Desenvolupament  ========\Modules\Entity management</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="j1PerfTimer.cpp">
+      <Filter>Desenvolupament  ========\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,12 +90,6 @@
     <ClInclude Include="j1Window.h">
       <Filter>Desenvolupament  ========\Modules\Core</Filter>
     </ClInclude>
-    <ClInclude Include="j2EntityManager.h">
-      <Filter>Desenvolupament  ========\Modules\Entity management</Filter>
-    </ClInclude>
-    <ClInclude Include="j2Entity.h">
-      <Filter>Desenvolupament  ========\Modules\Entity management</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
     </ClInclude>
@@ -98,6 +98,15 @@
     </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Entities.h">
+      <Filter>Desenvolupament  ========\Modules\Entity management</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Desenvolupament  ========\Modules\Entity management\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="j1PerfTimer.h">
+      <Filter>Desenvolupament  ========\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

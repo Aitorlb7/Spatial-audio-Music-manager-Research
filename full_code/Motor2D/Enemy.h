@@ -1,21 +1,27 @@
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
 
-#include "j2Entity.h"
 
-class Enemy : public j2Entity
+#include "P2Point.h"
+#include "Entity.h"
+
+class Enemy : public Entity
 {
 public:
-	Enemy();
+	Enemy(int x, int y, EntityType type);
 	~Enemy();
 
-	bool Start();
+	//bool Start();
 
-	bool Update(float dt, bool do_logic);
+	void Update(float dt);
 
-	bool CleanUp();
+	//bool CleanUp();
 
-	void Draw();
+
+public:
+	uint death_1 = 0u;
+	uint death_2 = 0u;
+	uint death_3 = 0u;
 
 };
 

@@ -10,8 +10,6 @@
 #endif
 #define NULL  0
 
-typedef unsigned __int32 uint32;
-
 // Deletes a buffer
 #define RELEASE( x ) \
     {                        \
@@ -39,6 +37,8 @@ typedef unsigned __int32 uint32;
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
 typedef unsigned int uint;
+typedef unsigned __int32 uint32;
+typedef unsigned __int64 uint64;
 typedef unsigned char uchar;
 
 template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
@@ -61,7 +61,8 @@ inline const char* const PATH(const char* folder, const char* file)
 	return path;
 }
 
-#define MIX_MAX_VOLUME	128
-//#define PROX_AREA_X 
+// Performance macros
+#define PERF_START(timer) timer.Start()
+#define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())
 
 #endif

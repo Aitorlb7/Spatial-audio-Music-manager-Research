@@ -14,6 +14,8 @@
 
 struct _Mix_Music;
 struct Mix_Chunk;
+
+
 enum FxPack
 {
 	DEATH = 0,
@@ -71,7 +73,6 @@ private:
 
 	Mix_Chunk* fx[MAX_FX];
 
-	// TODO 5 Create a new Mix_Chunk, fx_death_pack for example
 	Mix_Chunk* fx_death_pack[MAX_FX];
 
 	uint				last_fx = 0;

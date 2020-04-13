@@ -8,91 +8,38 @@
 #include "p2Log.h"
 #include <math.h>
 
-Player::Player() : j2Entity(ENTITY_TYPE::PLAYER)
-{
+Player::Player(int x, int y, EntityType type) : Entity(x, y, type) {
+
+	bool ret = true;
+
+	rect = { x,y,50,50 };
+
 }
 
 Player::~Player()
 {
 }
 
-bool Player::Start()
+void Player::Update(float dt)
 {
-	entity_rect = { 13,4,32,57 };
-	entity_tex = App->tex->Load("textures/sprites.png");
-	
-	
-	if (!clock)
-	{
-		timer.Start();
-		
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT && rect.y < 750) {
+		rect.y += 10;
+		App->render->camera.y += 10;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT && rect.y > 0) {
+		rect.y -= 10;
+		App->render->camera.y -= 10;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && rect.x < 1230) {
+		rect.x += 10;
+		App->render->camera.x += 10;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT && rect.x > 0) {
+		rect.x -= 10;
+		App->render->camera.x -= 10;
 	}
 
-	
-
-	/*App->audio->PlayFx(App->scene->fx, 1, -1, 10, 90, 30);*/
-
-	return true;
-}
-
-bool Player::Update(float dt, bool do_logic)
-{
-
-	
-
-	iPoint last_pos = position;
-
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		position.y -= 5;
-		
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		position.y += 5;
-		
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		position.x -= 5;
-		
-	}
-	
-
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		position.x += 5;
-		
-	}
-
-	
-
-	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
-		App->scene->P1->position.x = App->scene->DO->position.x;
-		App->scene->P1->position.y = App->scene->DO->position.y;
-		
-
-	}
-
-	App->render->FollowPlayer(position.x - last_pos.x, position.y - last_pos.y);
-
-	
-	if(!clock)
-		LOG("TIMER: %f", timer.ReadSec());
-	return true;
-}
-
-bool Player::CleanUp()
-{
-	App->tex->UnLoad(entity_tex);
-	return true;
-}
-
-void Player::Draw()
-{
-	App->render->Blit(entity_tex, position.x - 16, position.y -64, &entity_rect);
+	position.x = rect.x;
+	position.y = rect.y;
 }
 

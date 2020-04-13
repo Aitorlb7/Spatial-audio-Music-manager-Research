@@ -1,10 +1,11 @@
 #ifndef __j1APP_H__
 #define __j1APP_H__
 
+#include "p2List.h"
 #include "j1Module.h"
+#include "j1PerfTimer.h"
+#include "j1Timer.h"
 #include "PugiXml\src\pugixml.hpp"
-#include <list>
-#include <string>
 
 
 // Modules
@@ -14,8 +15,7 @@ class j1Render;
 class j1Textures;
 class j1Audio;
 class j1Scene;
-class j1Map;
-class j2EntityManager;
+class j1Entities;
 
 
 
@@ -49,9 +49,7 @@ public:
 	const char* GetArgv(int index) const;
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
-
-	void LoadGame(const char* file);
-	void SaveGame(const char* file) const;
+	float GetDT() const;
 
 private:
 
@@ -73,10 +71,6 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
-	// Load / Save
-	bool LoadGameNow();
-	bool SavegameNow() const;
-
 public:
 
 	// Modules
@@ -86,27 +80,30 @@ public:
 	j1Textures*			tex;
 	j1Audio*			audio;
 	j1Scene*			scene;
-	j2EntityManager*    entity_manager;
+	j1Entities* entities = NULL;
+
 	
 
 private:
 
-	//STL
-	std::list<j1Module*> stlModules;
 
-	//As of Now
-	uint				frames;
-	float				dt;
+	p2List<j1Module*>	modules;
 	int					argc;
-	char**				args;
+	char** args;
 
-	std::string title;
-	std::string organization;
+	p2SString			title;
+	p2SString			organization;
 
-	mutable bool		want_to_save;
-	bool				want_to_load;
-	std::string load_game;
-	mutable std::string	save_game;
+	j1PerfTimer			ptimer;
+	uint64				frame_count = 0;
+	j1Timer				startup_time;
+	j1Timer				frame_time;
+	j1Timer				last_sec_frame_time;
+	uint32				last_sec_frame_count = 0;
+	uint32				prev_last_sec_frame_count = 0;
+	float				dt = 0.0f;
+	int					capped_ms = -1;
+
 };
 
 extern j1App* App; 
