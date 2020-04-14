@@ -1,12 +1,27 @@
-## Welcome to GitHub Pages
+# Spatial Audio Music Manager Research
 
-You can use the [editor on GitHub](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+This project was developed by [Aitor Luque Bodet](<https://www.linkedin.com/in/aitor-luque-bodet-ab93a4175/>) , a second year student of the [Bachelor's degrees in Video Game Design and Development at CITM/TTC](<https://www.citm.upc.edu/ing/estudis/graus-videojocs/>) as of 14/04/2020. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This content was generated for the Project II subject under the supervision of lecturer [Ramón Santamaria](<https://www.linkedin.com/in/raysan/>).
 
-### Markdown
+The main focus of this research was:
+- Develop a music manager, capable of chaining a playlist with fading.
+- Play Audio and Fx spatially, managing all entities capable of generating audio.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## First approach
+
+### What is spatial audio?
+
+Spatial Audio is any audio which gives you a sense of space beyond conventional stereo, allowing the user to pinpoint where sound is coming from, whether this is above, below, or a full 360 degrees around you. For example stereo allows you to hear things in front left and right, but you can’t get a sense of surround, height or sounds from below you. With the introduction of the 3rd dimension, you have a sense of the exact location of sound sources from all around. This definition also appeals to 3D audio.
+
+[Image](src)
+
+When it comes to game development it's still being developed, but there are some approaches that simulates those conditions.
+Even in virtual reality, while you are interacting with 3D images, the sound should also give you the sense of space to compliment the immersive experience. As the human field of vision is at best around 110 degreess so, as in real life, in the 3D virtual world we rely on audio to tell us where we should be looking and what we should be interacting with.
+
+
+### What are we refering with music manager?
+
 
 ```markdown
 Syntax highlighted code block
