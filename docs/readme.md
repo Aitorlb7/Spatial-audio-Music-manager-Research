@@ -1,10 +1,14 @@
-# The Slate theme
+# Spatial Audio Music Manager Research
 
-[![Build Status](https://travis-ci.org/pages-themes/slate.svg?branch=master)](https://travis-ci.org/pages-themes/slate) [![Gem Version](https://badge.fury.io/rb/jekyll-theme-slate.svg)](https://badge.fury.io/rb/jekyll-theme-slate)
+This project was developed by [Aitor Luque Bodet](<https://www.linkedin.com/in/aitor-luque-bodet-ab93a4175/>) , a second year student of the [Bachelor's degrees in Video Game Design and Development at CITM/TTC](<https://www.citm.upc.edu/ing/estudis/graus-videojocs/>) as of 14/04/2020. 
 
-*Slate is a Jekyll theme for GitHub Pages. You can [preview the theme to see what it looks like](http://pages-themes.github.io/slate), or even [use it today](#usage).*
+This content was generated for the Project II subject under the supervision of lecturer [Ramón Santamaria](<https://www.linkedin.com/in/raysan/>).
 
-![Thumbnail of Slate](thumbnail.png)
+The main goals of this project were:
+- Develop a music mnager capable of chaining a playlist with fading.
+- Play audio and fx spatially, managing entities so all of them can potentially generate audio.
+
+[Website](https://aitorlb7.github.io/Spatial-audio-Music-manager-Research/)
 
 ## Usage
 
