@@ -19,9 +19,9 @@ public:
 
 
 public:
-	uint death_1 = 0u;
-	uint death_2 = 0u;
-	uint death_3 = 0u;
+	uint level_up_fx = 0u;
+	uint trade_fx = 0u;
+
 
 };
 

@@ -78,6 +78,17 @@ bool j1Audio::CleanUp()
 	{
 		Mix_FreeMusic(music);
 	}
+	//if (music_combat != NULL)//CREAR LISTA DE _Mix_Music* y eliminarla entera
+	//{
+	//	Mix_FreeMusic(music_combat);
+	//}
+
+
+	std::list<Mix_Chunk*>::iterator stl_item = fx.begin();
+	for (; stl_item != fx.end(); stl_item++)
+		Mix_FreeChunk(*stl_item);
+
+	fx.clear();
 
 	Mix_CloseAudio();
 	Mix_Quit();
@@ -140,7 +151,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-void j1Audio::PauseMusic()
+void j1Audio::PauseMusic(float fade_time)
 {
 	if (active)
 	{
@@ -158,7 +169,7 @@ void j1Audio::PauseMusic()
 	}
 }
  //Load WAV
-unsigned int j1Audio::LoadFx(const char* path, FxPack pack) // Loads the audio on the standar Mix_Chunk* or on a self-made one
+unsigned int j1Audio::LoadFx(const char* path) // Loads the audio on the standar Mix_Chunk* or on a self-made one
 {
 	unsigned int ret = 0;
 
@@ -167,100 +178,70 @@ unsigned int j1Audio::LoadFx(const char* path, FxPack pack) // Loads the audio o
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
 
-	if (chunk == nullptr)
+	if (chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
 	else
 	{
-		switch (pack)
-		{
-		case DEATH:
-			fx_death_pack[last_fx_death] = chunk;
-			ret = last_fx_death++;
-			if (last_fx_death == MAX_FX)
-			{
-				last_fx_death = 0;
-				ret = last_fx_death;
-			}
-			break;
-		case NONE:
-			fx[last_fx] = chunk;
-			ret = last_fx++;
-			if (last_fx == MAX_FX) {
-				last_fx = 0;
-				ret = last_fx;
-			}
-			break;
-		default:
-			break;
-		}
+
+		fx.push_back(chunk);
+		ret = fx.size();
 	}
 
 	return ret;
 }
-// Choose a WAV in a pack
-uint j1Audio::ChooseFx(FxPack pack)	// Choose an audio on the standar Mix_Chunk* or on a self-made one
-{
-	uint fx_num = 0;
-
-	switch (pack)
-	{
-	case DEATH:
-		while (fx_death_pack[fx_num] != nullptr)
-		{
-			fx_num++;
-		}
-		break;
-	case NONE:
-		while (fx[fx_num] != nullptr)
-		{
-			fx_num++;
-		}
-		break;
-	default:
-		break;
-	}
-
-	fx_num -= 1;
-
-	uint fx = rand() % fx_num;
-
-	return fx;
-}
+//// Choose a WAV in a pack
+//uint j1Audio::ChooseFx(FxPack pack)	// Choose an audio on the standar Mix_Chunk* or on a self-made one
+//{
+//	uint fx_num = 0;
+//
+//	switch (pack)
+//	{
+//	case DEATH:
+//		while (fx_death_pack[fx_num] != nullptr)
+//		{
+//			fx_num++;
+//		}
+//		break;
+//	case NONE:
+//		while (fx[fx_num] != nullptr)
+//		{
+//			fx_num++;
+//		}
+//		break;
+//	default:
+//		break;
+//	}
+//
+//	fx_num -= 1;
+//
+//	uint fx = rand() % fx_num;
+//
+//	return fx;
+//}
 // Play WAV
-bool j1Audio::PlayFx(unsigned int id, int repeat, FxPack pack)
+bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!active)
 		return false;
-	
-	switch (pack)
+
+
+	if (id > 0 && id <= fx.size())
 	{
-	case DEATH:
-		if (fx_death_pack[id] != nullptr)
-		{
-			Mix_PlayChannel(-1, fx_death_pack[id], repeat);
-			ret = true;
-		}
-		break;
-	case NONE:
-		if (fx[id] != nullptr)
-		{
-			Mix_PlayChannel(-1, fx[id], repeat);
-			ret = true;
-		}
-		break;
-	default:
-		break;
+		std::list <Mix_Chunk*>::const_iterator it;
+		it = std::next(fx.begin(), id - 1);
+		Mix_PlayChannel(-1, *it, repeat);//put channel , if -1 gets the next free channel available
 	}
 
+	LOG("PLAYING WAV: %d", id);
 	return ret;
 }
 
 // UnLoad WAV
-bool j1Audio::UnLoadFx(uint id, FxPack pack)
+bool j1Audio::UnLoadFx(uint id)
 {
 	if (!active)
 		return true;
@@ -269,18 +250,12 @@ bool j1Audio::UnLoadFx(uint id, FxPack pack)
 
 	Mix_Chunk* chunk = NULL;
 
-	switch (pack)
+	if (id > 0 && id <= fx.size())
 	{
-	case DEATH:
-		chunk = fx_death_pack[id];
-		break;
-	case NONE:
-		chunk = fx[id];
-		break;
-	default:
-		break;
+		std::list <Mix_Chunk*>::const_iterator it;
+		it = std::next(fx.begin(), id - 1);
+		chunk = *it;
 	}
-
 	if (chunk != nullptr)
 	{
 		Mix_FreeChunk(chunk);
@@ -291,7 +266,7 @@ bool j1Audio::UnLoadFx(uint id, FxPack pack)
 	return ret;
 }
 
-bool j1Audio::PlaySpatialFx(uint id, uint channel_angle, uint distance, FxPack pack, int repeat)
+bool j1Audio::PlaySpatialFx(uint id, uint channel_angle, uint distance,int repeat)
 {
 	bool ret = false;
 
@@ -300,18 +275,12 @@ bool j1Audio::PlaySpatialFx(uint id, uint channel_angle, uint distance, FxPack p
 
 	Mix_Chunk* chunk = NULL;
 
-	switch (pack)
+	if (id > 0 && id <= fx.size())
 	{
-	case DEATH:
-		chunk = fx_death_pack[id];
-		break;
-	case NONE:
-		chunk = fx[id];
-		break;
-	default:
-		break;
+		std::list <Mix_Chunk*>::const_iterator it;
+		it = std::next(fx.begin(), id - 1);
+		chunk = *it;
 	}
-
 	if (chunk != nullptr)
 	{
 		while (Mix_Playing(channel_angle) == 1)	// If the channel is already playing, choose the next channel that we already allocated with Mix_AllocateChannels()

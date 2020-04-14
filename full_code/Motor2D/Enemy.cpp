@@ -16,28 +16,25 @@ Enemy::Enemy(int x, int y, EntityType type) : Entity(x, y, type) {
 
 	bool ret = true;
 
-	rect = { x,y,50,50 };
+	//rect = { x,y,50,50 };
 
-	death_1 = App->audio->LoadFx("audio/fx/death_1.wav", DEATH);
-	death_2 = App->audio->LoadFx("audio/fx/death_2.wav", DEATH);
-	death_3 = App->audio->LoadFx("audio/fx/death_3.wav", DEATH);
+	level_up_fx = App->audio->LoadFx("audio/fx/Level_Up.wav");
+	trade_fx = App->audio->LoadFx("audio/fx/Trade.wav");
+
 }
 Enemy::~Enemy()
 {
 	LOG("Freeing the enemy");
-	App->audio->UnLoadFx(death_1, DEATH);
-	App->audio->UnLoadFx(death_2, DEATH);
-	App->audio->UnLoadFx(death_3, DEATH);
+	App->audio->UnLoadFx(level_up_fx);
+	App->audio->UnLoadFx(trade_fx);
 }
 
 void Enemy::Update(float dt)
 {
-	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_DOWN) && this->type == ENEMY1)
-		App->audio->PlaySpatialFx(App->audio->ChooseFx(DEATH), App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position), DEATH);
+	if ((App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN ) && this->type == ENEMY1)
+		App->audio->PlaySpatialFx(level_up_fx, App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position));
 
-	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_KP_2) == KEY_DOWN) && this->type == ENEMY2)
-		App->audio->PlaySpatialFx(App->audio->ChooseFx(DEATH), App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position), DEATH);
+	if ((App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) && this->type == ENEMY2)
+		App->audio->PlaySpatialFx(trade_fx, App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position));
 
-	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_KP_3) == KEY_DOWN) && this->type == ENEMY3)
-		App->audio->PlaySpatialFx(App->audio->ChooseFx(DEATH), App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position), DEATH);
 }

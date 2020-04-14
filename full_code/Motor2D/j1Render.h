@@ -28,17 +28,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Load / Save
-	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;
-
 	// Utils
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
-	iPoint ScreenToWorld(int x, int y) const;
 
 	// Draw & Blit
-	bool Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section = NULL, float speed = 1.0f, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
+	bool Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section = NULL, float speed = 1.0f, float scale = 1.0f,double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool use_camera = true) const;
 	bool DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
 	bool DrawCircle(int x1, int y1, int redius, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
@@ -46,8 +41,7 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
-	// Center camera
-	void FollowPlayer(int mov_x, int mov_y);
+
 
 public:
 

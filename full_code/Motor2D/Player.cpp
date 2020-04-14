@@ -12,7 +12,7 @@ Player::Player(int x, int y, EntityType type) : Entity(x, y, type) {
 
 	bool ret = true;
 
-	rect = { x,y,50,50 };
+	rect = { x,y,20,20 };
 
 }
 
@@ -24,19 +24,19 @@ void Player::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT && rect.y < 750) {
 		rect.y += 10;
-		App->render->camera.y += 10;
+	/*	App->render->camera.y += 10;*/
 	}
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT && rect.y > 0) {
 		rect.y -= 10;
-		App->render->camera.y -= 10;
+		//App->render->camera.y -= 10;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && rect.x < 1230) {
 		rect.x += 10;
-		App->render->camera.x += 10;
+		//App->render->camera.x += 10;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT && rect.x > 0) {
 		rect.x -= 10;
-		App->render->camera.x -= 10;
+		//App->render->camera.x -= 10;
 	}
 
 	position.x = rect.x;

@@ -31,13 +31,15 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	App->entities->SpawnEntity(205, 200, ENEMY1);
-	App->entities->SpawnEntity(615, 350, ENEMY2);
-	App->entities->SpawnEntity(1025, 200, ENEMY3);
+
+	
+	App->entities->SpawnEntity(150, 300, ENEMY1);
+	App->entities->SpawnEntity(500, 100, ENEMY2);
+	App->entities->SpawnEntity(850, 300, ENEMY3);
 
 	App->entities->SpawnEntity(615, 600, PLAYER);
 
-	App->audio->PlayMusic("audio/music/star-wars-cantina.ogg");
+	App->audio->PlayMusic("audio/music/Opening.ogg");
 
 	return true;
 }
@@ -51,9 +53,9 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	App->render->DrawCircle(230, 225, App->audio->scale, 255, 0, 0, 255);
-	App->render->DrawCircle(640, 375, App->audio->scale, 0, 255, 0, 255);
-	App->render->DrawCircle(1050, 225, App->audio->scale, 0, 0, 255, 255);
+	App->render->DrawCircle(150, 300, App->audio->scale, 255, 0, 0, 255);
+	App->render->DrawCircle(500, 100, App->audio->scale, 0, 255, 0, 255);
+	App->render->DrawCircle(850, 300, App->audio->scale, 0, 0, 255, 255);
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN) {
 		App->audio->PauseMusic();

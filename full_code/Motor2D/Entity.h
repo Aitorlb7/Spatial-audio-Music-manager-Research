@@ -11,13 +11,6 @@ protected:
 	bool key_entities_speed = false;
 
 public:
-	iPoint position = iPoint(0, 0);
-	EntityType type = EntityType::NO_TYPE;
-	int number = 0;
-	bool to_destroy = false;
-	SDL_Rect rect = { 0,0,0,0 };
-
-public:
 	Entity(int x, int y, EntityType type);
 	virtual ~Entity();
 
@@ -25,6 +18,17 @@ public:
 	virtual void Draw();
 	virtual void SetEntitiesSpeed(float dt) {};
 
+public:
+	SDL_Rect W, WPressed, A, APressed, D, DPressed;
+	iPoint posA, posD, posW;
+	SDL_Texture* keys;
+	int offset;
+
+	iPoint position = iPoint(0, 0);
+	EntityType type = EntityType::NO_TYPE;
+	int number = 0;
+	bool to_destroy = false;
+	SDL_Rect rect = { 0,0,0,0 };
 };
 
 #endif // __ENTITY_H__

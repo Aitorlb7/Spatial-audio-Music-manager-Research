@@ -4,9 +4,10 @@
 #include "j1Module.h"
 #include "p2Point.h"
 #include "SDL_mixer\include\SDL_mixer.h"
+#include<list>
+#include<string>
 
-
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_MUSIC_FADE_TIME 3.0f
 #define MAX_FX 500						// The maximum number of fx
 #define RAD_TO_DEG 57.32f				// The result of 180 / 3.14 for pass radiants to degrees
 #define MAX_DISTANCE 255				// The maximum distance where you can listen
@@ -16,12 +17,13 @@ struct _Mix_Music;
 struct Mix_Chunk;
 
 
-enum FxPack
-{
-	DEATH = 0,
-
-	NONE
-};
+//enum FxPack
+//{
+//	LEVEL = 0,
+//	TRADE,
+//
+//	NONE
+//};
 class j1Audio : public j1Module
 {
 public:
@@ -41,23 +43,20 @@ public:
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
 
 	// Pause the music
-	void PauseMusic();
+	void PauseMusic(float fade_time = DEFAULT_MUSIC_FADE_TIME);
 
 	// Load a WAV in memory
-	unsigned int LoadFx(const char* path, FxPack pack = NONE);
+	unsigned int LoadFx(const char* path);
 
 	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx, int repeat = 0, FxPack pack = NONE);
-
-	// Choose a random loaded WAV in a pack
-	uint ChooseFx(FxPack pack = NONE);
+	bool PlayFx(unsigned int fx, int repeat = 0);
 
 	// UnLoad WAV
-	bool UnLoadFx(uint id, FxPack pack = NONE);
+	bool UnLoadFx(uint id);
 
 	// Play a WAV like a 3D audio reciving an fx, a channel and an angle (in our case is the same because the reserved Channels on Mix_AllocateChannels()),
 	// a distance, a pack of fx and how many times you want to repeat it
-	bool PlaySpatialFx(uint id, uint channel_angle = 1, uint distance = 1, FxPack pack = NONE, int repeat = 0);
+	bool PlaySpatialFx(uint id, uint channel_angle = 1, uint distance = 1,int repeat = 0);
 
 	// Get the angle of the Y axis with the position of the enemy regard the player position
 	uint GetAngle(iPoint player_pos, iPoint enemy_pos);
@@ -70,13 +69,7 @@ public:
 private:
 
 	_Mix_Music* music = NULL;
-
-	Mix_Chunk* fx[MAX_FX];
-
-	Mix_Chunk* fx_death_pack[MAX_FX];
-
-	uint				last_fx = 0;
-	uint				last_fx_death = 0;
+	std::list<Mix_Chunk*> fx;
 
 public:
 
