@@ -14,6 +14,8 @@ enum EntityType
 	ENEMY1,
 	ENEMY2,
 	ENEMY3,
+	ENEMY4,
+	ENEMY5,
 
 	NO_TYPE
 };
@@ -48,10 +50,6 @@ public:
 public:
 
 	std::vector<Entity*> entities;
-
-
-
-
 
 };
 

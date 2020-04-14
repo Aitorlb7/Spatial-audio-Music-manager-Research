@@ -75,10 +75,6 @@ bool j1Entities::CleanUp()
 {
 	LOG("Freeing all enemies");
 
-
-
-
-
 	return true;
 }
 

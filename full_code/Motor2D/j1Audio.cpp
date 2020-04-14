@@ -12,7 +12,7 @@
 
 j1Audio::j1Audio() : j1Module()
 {
-	music = NULL;
+	//music = NULL;
 	name.create("audio");
 }
 
@@ -56,7 +56,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 
 	Mix_AllocateChannels(360);										// Allocate the channels we will use 
 
-	volume = config.child("music").attribute("volume").as_int();	// Load the volume from XML, it's set to 100 but the maximum is 128
+	volume = config.child("music").attribute("volume").as_int();	// Load the volume from XML
 
 	scale = config.child("distance").attribute("scale").as_int();	// Load the distance scale if you want to change it
 
@@ -65,7 +65,36 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	
 	return ret;
 }
+bool j1Audio::Update(float dt)
+{
+	if (!active)
+		return true;
 
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)	// Increase volume
+	{
+		Mix_VolumeMusic(Mix_VolumeMusic(-1) + 10);
+		Mix_Volume(-1, Mix_Volume(-1, -1) + 10);
+
+		volume = Mix_VolumeMusic(-1);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)	// Decrease volume
+	{
+		if (Mix_VolumeMusic(-1) <= 8)
+			Mix_VolumeMusic(0);
+		else
+			Mix_VolumeMusic(Mix_VolumeMusic(-1) - 10);
+
+		if (Mix_Volume(-1, -1) <= 8)
+			Mix_Volume(-1, 0);
+		else
+			Mix_Volume(-1, Mix_Volume(-1, -1) - 10);
+
+		volume = Mix_VolumeMusic(-1);
+	}
+
+	return true;
+}
 // Called before quitting
 bool j1Audio::CleanUp()
 {
@@ -74,19 +103,17 @@ bool j1Audio::CleanUp()
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if (music != NULL)
+	std::list<Mix_Music*>::iterator stl_item = music.begin(); //Release music list
+	for (; stl_item != music.end(); stl_item++)
 	{
-		Mix_FreeMusic(music);
+		Mix_FreeMusic(*stl_item);
 	}
-	//if (music_combat != NULL)//CREAR LISTA DE _Mix_Music* y eliminarla entera
-	//{
-	//	Mix_FreeMusic(music_combat);
-	//}
 
-
-	std::list<Mix_Chunk*>::iterator stl_item = fx.begin();
-	for (; stl_item != fx.end(); stl_item++)
-		Mix_FreeChunk(*stl_item);
+	std::list<Mix_Chunk*>::iterator stl_item2 = fx.begin(); //Release fx list
+	for (; stl_item2 != fx.end(); stl_item2++)
+	{
+		Mix_FreeChunk(*stl_item2);
+	}
 
 	fx.clear();
 
@@ -97,57 +124,59 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
+unsigned int j1Audio::LoadMusic(const char* path) // Loads the audio on the Mix_Music* 
+{
+	unsigned int ret = 0;
+
+	if (!active)
+		return 0;
+
+	Mix_Music* chunk = Mix_LoadMUS(path);
+
+	if (chunk == NULL)
+	{
+		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+	}
+	else
+	{
+
+		music.push_back(chunk);
+		ret = music.size();
+	}
+
+	return ret;
+}
+
 // Play a music file
-bool j1Audio::PlayMusic(const char* path, float fade_time)
+bool j1Audio::PlayMusic(unsigned int id, float fade_time)
 {
 	bool ret = true;
 
 	if(!active)
 		return false;
 
-	if(music != NULL)
+	if (id > 0 && id <= music.size())
 	{
-		if(fade_time > 0.0f)
+		std::list <Mix_Music*>::const_iterator it;
+		it = std::next(music.begin(), id - 1);
+		if (*it != NULL)
 		{
-			Mix_FadeOutMusic(int(fade_time * 1000.0f));
-		}
-		else
-		{
-			Mix_HaltMusic();
-		}
-
-		// this call blocks until fade out is done
-		Mix_FreeMusic(music);
-	}
-
-	music = Mix_LoadMUS(path);
-
-	if(music == NULL)
-	{
-		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
-	else
-	{
-		if(fade_time > 0.0f)
-		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
+			if (fade_time > 0.0f)
 			{
-				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
+				Mix_FadeOutMusic(int(fade_time * 1000.0f));
+			}
+			else
+			{
+				Mix_HaltMusic();
 			}
 		}
-		else
+		if (fade_time > 0.0f)
 		{
-			if(Mix_PlayMusic(music, -1) < 0)
-			{
-				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
+			Mix_FadeInMusic(*it, -1, (int)(fade_time * 1000.0f));
 		}
+		
 	}
 
-	LOG("Successfully playing %s", path);
 	return ret;
 }
 
@@ -157,7 +186,7 @@ void j1Audio::PauseMusic(float fade_time)
 	{
 		if (Mix_PlayingMusic() == 1)	// Sees if there is music playing
 		{
-			if (Mix_PausedMusic() == 1)	// If the music is already paused resume it
+			if (Mix_PausedMusic() == 1)	// If there is resume it
 			{
 				Mix_ResumeMusic();
 			}
@@ -169,7 +198,7 @@ void j1Audio::PauseMusic(float fade_time)
 	}
 }
  //Load WAV
-unsigned int j1Audio::LoadFx(const char* path) // Loads the audio on the standar Mix_Chunk* or on a self-made one
+unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
@@ -191,35 +220,7 @@ unsigned int j1Audio::LoadFx(const char* path) // Loads the audio on the standar
 
 	return ret;
 }
-//// Choose a WAV in a pack
-//uint j1Audio::ChooseFx(FxPack pack)	// Choose an audio on the standar Mix_Chunk* or on a self-made one
-//{
-//	uint fx_num = 0;
-//
-//	switch (pack)
-//	{
-//	case DEATH:
-//		while (fx_death_pack[fx_num] != nullptr)
-//		{
-//			fx_num++;
-//		}
-//		break;
-//	case NONE:
-//		while (fx[fx_num] != nullptr)
-//		{
-//			fx_num++;
-//		}
-//		break;
-//	default:
-//		break;
-//	}
-//
-//	fx_num -= 1;
-//
-//	uint fx = rand() % fx_num;
-//
-//	return fx;
-//}
+
 // Play WAV
 bool j1Audio::PlayFx(unsigned int id, int repeat)
 {

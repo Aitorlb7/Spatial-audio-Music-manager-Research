@@ -37,6 +37,8 @@ public:
 private:
 	SDL_Texture* debug_tex;
 
+	uint opening_music = 0u;
+	uint battle_music = 0u;
 };
 
 #endif // __j1SCENE_H__

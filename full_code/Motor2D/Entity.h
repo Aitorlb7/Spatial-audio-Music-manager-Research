@@ -19,8 +19,8 @@ public:
 	virtual void SetEntitiesSpeed(float dt) {};
 
 public:
-	SDL_Rect W, WPressed, A, APressed, D, DPressed;
-	iPoint posA, posD, posW;
+	SDL_Rect W, WPressed, A, APressed, D, DPressed, F, FPressed, P, PPressed;
+	iPoint posA, posD, posW, posF , posP;
 	SDL_Texture* keys;
 	int offset;
 

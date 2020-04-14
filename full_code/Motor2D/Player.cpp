@@ -22,21 +22,17 @@ Player::~Player()
 
 void Player::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT && rect.y < 750) {
-		rect.y += 10;
-	/*	App->render->camera.y += 10;*/
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT && rect.y < 700) {
+		rect.y += 5;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT && rect.y > 0) {
-		rect.y -= 10;
-		//App->render->camera.y -= 10;
+		rect.y -= 5;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && rect.x < 1230) {
-		rect.x += 10;
-		//App->render->camera.x += 10;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && rect.x < 1260) {
+		rect.x += 5;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT && rect.x > 0) {
-		rect.x -= 10;
-		//App->render->camera.x -= 10;
+		rect.x -= 5;
 	}
 
 	position.x = rect.x;

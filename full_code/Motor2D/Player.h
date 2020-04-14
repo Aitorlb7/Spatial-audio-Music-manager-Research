@@ -13,13 +13,8 @@ public:
 	Player(int x, int y, EntityType type);
 	~Player();
 
-	//bool Start();
-
 	void Update(float dt);
 
-	//bool CleanUp();
-
-	//void Draw();
 
 public:
 	

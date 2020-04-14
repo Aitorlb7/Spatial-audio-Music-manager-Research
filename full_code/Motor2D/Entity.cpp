@@ -12,12 +12,17 @@ Entity::Entity(int x, int y, EntityType type) : position(x, y), type(type)
 	APressed = { 48,147,16,13 };
 	D = { 80,49,16,15 };
 	DPressed = { 80,147,16,13 };
-	posA = { 150, 300 };
-	posW = { 500,100 };
-	posD = { 850,300 };
+	F = { 96,49,16,15 };
+	FPressed = { 96,148,16,13 };
+	P = { 192,33,16,15 };
+	PPressed = { 192,131,16,13 };
+	posA = { 205 -A.w, 200 -A.h };
+	posW = { 1025-W.w, 200-W.h };
+	posD = { 1025,700 };
+	posF = { 1075, 700 };
+	posP = { 1125,700 };
 	offset = 3;
 	keys = App->tex->Load("textures/keys.png");
-
 }
 
 Entity::~Entity()
@@ -48,6 +53,18 @@ void Entity::Draw()
 			App->render->Blit(keys, posD.x, posD.y, &DPressed, 1.0f, 2.0f);
 		else
 			App->render->Blit(keys, posD.x, posD.y - offset, &D, 1.0f, 2.0f);
+
+	case ENEMY4:
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+			App->render->Blit(keys, posF.x, posF.y, &FPressed, 1.0f, 2.0f);
+		else
+			App->render->Blit(keys, posF.x, posF.y - offset, &F, 1.0f, 2.0f);
+
+	case ENEMY5:
+		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT)
+			App->render->Blit(keys, posP.x, posP.y, &PPressed, 1.0f, 2.0f);
+		else
+			App->render->Blit(keys, posP.x, posP.y - offset, &P, 1.0f, 2.0f);
 
 		break;
 		break;

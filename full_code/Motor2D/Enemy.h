@@ -11,11 +11,7 @@ public:
 	Enemy(int x, int y, EntityType type);
 	~Enemy();
 
-	//bool Start();
-
 	void Update(float dt);
-
-	//bool CleanUp();
 
 
 public:

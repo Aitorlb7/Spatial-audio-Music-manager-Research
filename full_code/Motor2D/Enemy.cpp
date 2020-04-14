@@ -37,4 +37,5 @@ void Enemy::Update(float dt)
 	if ((App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) && this->type == ENEMY2)
 		App->audio->PlaySpatialFx(trade_fx, App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position));
 
+
 }
