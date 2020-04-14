@@ -44,8 +44,8 @@ bool j1Render::Awake(pugi::xml_node& config)
 	{
 		camera.w = App->win->screen_surface->w;
 		camera.h = App->win->screen_surface->h;
-		camera.x = 446;
-		camera.y = -550;
+		camera.x = 0;
+		camera.y = 0;
 	}
 
 	return ret;
@@ -87,35 +87,9 @@ bool j1Render::CleanUp()
 	return true;
 }
 
-// Load Game State
-bool j1Render::Load(pugi::xml_node& data)
-{
-	camera.x = data.child("camera").attribute("x").as_int();
-	camera.y = data.child("camera").attribute("y").as_int();
-
-	return true;
-}
-
-// Save Game State
-bool j1Render::Save(pugi::xml_node& data) const
-{
-	pugi::xml_node cam = data.append_child("camera");
-
-	cam.append_attribute("x") = camera.x;
-	cam.append_attribute("y") = camera.y;
-
-	return true;
-}
-
 void j1Render::SetBackgroundColor(SDL_Color color)
 {
 	background = color;
-}
-
-void j1Render::FollowPlayer(int mov_x, int mov_y)
-{
-	camera.x -= mov_x;
-	camera.y -= mov_y;
 }
 
 void j1Render::SetViewPort(const SDL_Rect& rect)
@@ -128,26 +102,15 @@ void j1Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-iPoint j1Render::ScreenToWorld(int x, int y) const
-{
-	iPoint ret;
-	int scale = App->win->GetScale();
-
-	ret.x = (x - camera.x / scale);
-	ret.y = (y - camera.y / scale);
-
-	return ret;
-}
-
 // Blit to screen
-bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y) const
+bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, float scale, double angle, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
-	uint scale = App->win->GetScale();
+	uint window_scale = App->win->GetScale();
 
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	rect.x = (int)(camera.x * speed) + x * window_scale;
+	rect.y = (int)(camera.y * speed) + y * window_scale;
 
 	if(section != NULL)
 	{
@@ -159,8 +122,8 @@ bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section,
 		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	}
 
-	rect.w *= scale;
-	rect.h *= scale;
+	rect.w *= window_scale * scale;
+	rect.h *= window_scale * scale;
 
 	SDL_Point* p = NULL;
 	SDL_Point pivot;

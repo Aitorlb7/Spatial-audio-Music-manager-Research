@@ -10,20 +10,12 @@
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define MAX_FX 500						// The maximum number of fx
 #define RAD_TO_DEG 57.32f				// The result of 180 / 3.14 for pass radiants to degrees
-#define MAX_DISTANCE 250				// The maximum distance where you can listen
+#define MAX_DISTANCE 255				// The maximum distance where you can listen
 
 
 struct _Mix_Music;
 struct Mix_Chunk;
 
-
-//enum FxPack
-//{
-//	LEVEL = 0,
-//	TRADE,
-//
-//	NONE
-//};
 class j1Audio : public j1Module
 {
 public:

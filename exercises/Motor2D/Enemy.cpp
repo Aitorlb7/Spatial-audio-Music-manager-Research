@@ -1,42 +1,46 @@
+#include "P2Defs.h"
+#include "P2Log.h"
 #include "Enemy.h"
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
+#include "j1Audio.h"
+#include "j1Entities.h"
+#include "j1Timer.h"
+#include "Enemy.h"
+#include "Player.h"
+#include "j1Input.h"
 
 
-Enemy::Enemy() : j2Entity(ENTITY_TYPE::ENEMY)
-{
+Enemy::Enemy(int x, int y, EntityType type) : Entity(x, y, type) {
+
+	bool ret = true;
+
+	//rect = { x,y,50,50 };
+
+	level_up_fx = App->audio->LoadFx("audio/fx/Level_Up.wav");
+	trade_fx = App->audio->LoadFx("audio/fx/Trade.wav");
+
 }
-
 Enemy::~Enemy()
 {
+	LOG("Freeing the enemy");
+	App->audio->UnLoadFx(level_up_fx);
+	App->audio->UnLoadFx(trade_fx);
 }
 
-bool Enemy::Start()
+void Enemy::Update(float dt)
 {
-	entity_rect = {62,4,32,57};
-	entity_tex = App->tex->Load("textures/sprites.png");
-	
-	
+	// TODO 4 Once the key is pressed play the fx using PlaySpatialFx() 
+	if ((App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) && this->type == ENEMY1)
+	{
 
-	return true;
-}
+	}
+		
 
-bool Enemy::Update(float dt, bool do_logic)
-{
-	
+	if ((App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) && this->type == ENEMY2)
+	{
 
+	}
 
-	return true;
-}
-
-bool Enemy::CleanUp()
-{
-	App->tex->UnLoad(entity_tex);
-	return true;
-}
-
-void Enemy::Draw()
-{
-	App->render->Blit(entity_tex, position.x -16, position.y -64, &entity_rect);
 }

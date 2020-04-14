@@ -6,6 +6,7 @@
 #ifndef __j1MODULE_H__
 #define __j1MODULE_H__
 
+#include "p2SString.h"
 #include "PugiXml\src\pugixml.hpp"
 
 class j1App;
@@ -61,19 +62,9 @@ public:
 		return true;
 	}
 
-	virtual bool Load(pugi::xml_node&)
-	{
-		return true;
-	}
-
-	virtual bool Save(pugi::xml_node&) const
-	{
-		return true;
-	}
-
 public:
 
-	std::string	name;
+	p2SString	name;
 	bool		active;
 
 };

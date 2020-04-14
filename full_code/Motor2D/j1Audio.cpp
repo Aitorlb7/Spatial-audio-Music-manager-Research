@@ -54,7 +54,10 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
+	//TODO 1 Allocate the channels that we will use | Hint: Mix_AllocateChannels() can help us
 	Mix_AllocateChannels(360);										// Allocate the channels we will use 
+
+
 
 	volume = config.child("music").attribute("volume").as_int();	// Load the volume from XML
 
@@ -131,16 +134,17 @@ unsigned int j1Audio::LoadMusic(const char* path) // Loads the audio on the Mix_
 	if (!active)
 		return 0;
 
-	Mix_Music* chunk = Mix_LoadMUS(path);
+	//TODO 5 load the audio path given into a Mix_Music variable
+	Mix_Music* music_chunk = Mix_LoadMUS(path);
 
-	if (chunk == NULL)
+	if (music_chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
 	else
 	{
-
-		music.push_back(chunk);
+		//TODO 5.1 Add the previous audio into the list
+		music.push_back(music_chunk);
 		ret = music.size();
 	}
 
@@ -157,8 +161,11 @@ bool j1Audio::PlayMusic(unsigned int id, float fade_time)
 
 	if (id > 0 && id <= music.size())
 	{
+		//TODO 6 Iterate all the music audios stored in the list
 		std::list <Mix_Music*>::const_iterator it;
 		it = std::next(music.begin(), id - 1);
+		
+		//TODO 7 Given the fade_time implement a fade in and fade out using Mix_Fade(Out/In)Music
 		if (*it != NULL)
 		{
 			if (fade_time > 0.0f)
@@ -291,6 +298,8 @@ bool j1Audio::PlaySpatialFx(uint id, uint channel_angle, uint distance,int repea
 			if (channel_angle > 360)
 				channel_angle = 0;
 		}
+
+		// TODO 2 Set a channel in a position given a channel, an angle and a distance, There is SDL_Mixer function already explained 
 		// Play the channel that we already placed with Mix_SetPosition()
 		Mix_SetPosition(channel_angle, channel_angle, distance);	// Set a channel in a position given a channel, an angle and a distance
 
@@ -320,6 +329,8 @@ uint j1Audio::GetAngle(iPoint player_pos, iPoint enemy_pos)
 
 uint j1Audio::GetDistance(iPoint player_pos, iPoint enemy_pos)
 {
+	
+	// TODO 3 Calculate the distance between the player and the enemy passed by reference using pythagoras
 	uint distance = sqrt(pow(player_pos.x - enemy_pos.x, 2) + pow(player_pos.y - enemy_pos.y, 2));	// Calculate the distance with Pythagoras
 
 	uint distance_scaled = (distance * MAX_DISTANCE) / scale;										// We can scale the maximum hear distance by modifying scale in the config XML

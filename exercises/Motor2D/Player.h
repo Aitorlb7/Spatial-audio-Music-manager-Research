@@ -1,30 +1,22 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "j2Entity.h"
+#include "Entity.h"
 #include "j1Timer.h"
 
 class j1Timer;
 
-class Player : public j2Entity
+class Player : public Entity
 {
 public:
-	Player();
+
+	Player(int x, int y, EntityType type);
 	~Player();
 
-	bool Start();
+	void Update(float dt);
 
-	bool Update(float dt, bool do_logic);
-
-	bool CleanUp();
-
-	void Draw();
 
 public:
-	j1Timer timer;
-	bool clock = false;
-	
-	
 	
 };
 

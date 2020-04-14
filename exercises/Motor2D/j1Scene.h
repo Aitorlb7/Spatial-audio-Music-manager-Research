@@ -5,7 +5,6 @@
 
 
 struct SDL_Texture;
-class j2Entity;
 
 class j1Scene : public j1Module
 {
@@ -34,29 +33,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	bool debug = true; 
-	bool encounter = false;
-	
-	
 
 private:
 	SDL_Texture* debug_tex;
 
-	
-
-	
-
-public:
-	//TODO 2.2: Create the entities(you can start with the player(P1) and 2 enemies
-	j2Entity* P1 = nullptr;
-	j2Entity* DO = nullptr;
-	
-	
-	//TODO 2.3: Create the fx that our entities will use(do at least 3) 
-	unsigned int fx_player = 0;
-	unsigned int fx_do = 0;
-	
-	
+	uint opening_music = 0u;
+	uint battle_music = 0u;
 };
 
 #endif // __j1SCENE_H__

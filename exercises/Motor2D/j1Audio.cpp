@@ -2,6 +2,9 @@
 #include "p2Log.h"
 #include "j1App.h"
 #include "j1Audio.h"
+#include "j1Input.h"
+#include <math.h>
+#include <time.h>
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
@@ -9,9 +12,10 @@
 
 j1Audio::j1Audio() : j1Module()
 {
-	music = NULL;
-	name = "audio";
+	//music = NULL;
+	name.create("audio");
 }
+
 
 // Destructor
 j1Audio::~j1Audio()
@@ -23,7 +27,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	LOG("Loading Audio Mixer");
 	bool ret = true;
 	SDL_Init(0);
-
+	srand(time(NULL));
 	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
 		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -50,15 +54,48 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	music_combat = Mix_LoadMUS("audio/combat.ogg");
+	//TODO 1 Allocate the channels that we will use | Hint: Mix_AllocateChannels() can help us
+	
 
-	//TODO 1: Allocate the number of channels you'll use for the fx's(tip, look at Mix_AllocateChannels from the documentation)
-	
-	
+	volume = config.child("music").attribute("volume").as_int();	// Load the volume from XML
+
+	scale = config.child("distance").attribute("scale").as_int();	// Load the distance scale if you want to change it
+
+	Mix_VolumeMusic(volume);
+	Mix_Volume(-1, volume);
 	
 	return ret;
 }
+bool j1Audio::Update(float dt)
+{
+	if (!active)
+		return true;
 
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)	// Increase volume
+	{
+		Mix_VolumeMusic(Mix_VolumeMusic(-1) + 10);
+		Mix_Volume(-1, Mix_Volume(-1, -1) + 10);
+
+		volume = Mix_VolumeMusic(-1);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)	// Decrease volume
+	{
+		if (Mix_VolumeMusic(-1) <= 8)
+			Mix_VolumeMusic(0);
+		else
+			Mix_VolumeMusic(Mix_VolumeMusic(-1) - 10);
+
+		if (Mix_Volume(-1, -1) <= 8)
+			Mix_Volume(-1, 0);
+		else
+			Mix_Volume(-1, Mix_Volume(-1, -1) - 10);
+
+		volume = Mix_VolumeMusic(-1);
+	}
+
+	return true;
+}
 // Called before quitting
 bool j1Audio::CleanUp()
 {
@@ -67,21 +104,19 @@ bool j1Audio::CleanUp()
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != NULL)
+	std::list<Mix_Music*>::iterator stl_item = music.begin(); //Release music list
+	for (; stl_item != music.end(); stl_item++)
 	{
-		Mix_FreeMusic(music);
-	}
-	if (music_combat != NULL)//CREAR LISTA DE _Mix_Music* y eliminarla entera
-	{
-		Mix_FreeMusic(music_combat);
+		Mix_FreeMusic(*stl_item);
 	}
 
+	std::list<Mix_Chunk*>::iterator stl_item2 = fx.begin(); //Release fx list
+	for (; stl_item2 != fx.end(); stl_item2++)
+	{
+		Mix_FreeChunk(*stl_item2);
+	}
 
-	std::list<Mix_Chunk*>::iterator stl_item = stl_fx.begin();
-	for (; stl_item != stl_fx.end(); stl_item++)
-		Mix_FreeChunk(*stl_item);
-
-	stl_fx.clear();
+	fx.clear();
 
 	Mix_CloseAudio();
 	Mix_Quit();
@@ -90,281 +125,202 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
+unsigned int j1Audio::LoadMusic(const char* path) // Loads the audio on the Mix_Music* 
+{
+	unsigned int ret = 0;
+
+	if (!active)
+		return 0;
+
+	//TODO 5 load the audio path given into a Mix_Music variable
+	Mix_Music* music_chunk = NULL ;
+
+	if (music_chunk == NULL)
+	{
+		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+	}
+	else
+	{
+		//TODO 5.1 Add the previous audio into the list
+	
+
+		ret = music.size();
+	}
+
+	return ret;
+}
+
 // Play a music file
-bool j1Audio::PlayMusic(const char* path, float fade_time)
+bool j1Audio::PlayMusic(unsigned int id, float fade_time)
 {
 	bool ret = true;
 
 	if(!active)
 		return false;
 
-	if(music != NULL)
+	if (id > 0 && id <= music.size())
 	{
-		if(fade_time > 0.0f)
-		{
-			Mix_FadeOutMusic(int(fade_time * 1000.0f));
-		}
-		else
-		{
-			Mix_HaltMusic();
-		}
-
-		// this call blocks until fade out is done
-		Mix_FreeMusic(music);
+		//TODO 6 Iterate all the music audios stored in the list
+		
+		
+		//TODO 7 Given the fade_time implement a fade in and fade out using Mix_Fade(Out/In)Music
+		
+		
 	}
 
-	music = Mix_LoadMUS(path);
-
-	if(music == NULL)
-	{
-		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
-	else
-	{
-		if(fade_time > 0.0f)
-		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
-			{
-				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-		else
-		{
-			if(Mix_PlayMusic(music, -1) < 0)
-			{
-				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-	}
-
-	LOG("Successfully playing %s", path);
 	return ret;
 }
 
-//TODO 2.1: Look at LoadFx and see how it works, understand the fact that you're doing push_backs of the fx into our list stl_fx
+void j1Audio::PauseMusic(float fade_time)
+{
+	if (active)
+	{
+		if (Mix_PlayingMusic() == 1)	// Sees if there is music playing
+		{
+			if (Mix_PausedMusic() == 1)	// If there is resume it
+			{
+				Mix_ResumeMusic();
+			}
+			else
+			{
+				Mix_PauseMusic();
+			}
+		}
+	}
+}
  //Load WAV
 unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
-	if(!active)
+	if (!active)
 		return 0;
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
-	
-	if(chunk == NULL)
+
+	if (chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
 	else
 	{
-		
-		stl_fx.push_back(chunk);
-		ret = stl_fx.size();
+
+		fx.push_back(chunk);
+		ret = fx.size();
 	}
 
 	return ret;
 }
 
-
-//TODO 3.1 : WE WANT TO MODIFY PlayFx, WE WILL PASS THEM AN FX ID, A CHANNEL TO PLAY ON, IF IT REPEATS, THE VOLUME AND A Sint16 angle and Uint8 distance
 // Play WAV
-bool j1Audio::PlayFx()
+bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!active)
 		return false;
-	
 
-	if (id > 0 && id <= stl_fx.size())
+
+	if (id > 0 && id <= fx.size())
 	{
 		std::list <Mix_Chunk*>::const_iterator it;
-		it = std::next(stl_fx.begin(), id - 1);
-		//TODO 3.2: WE ADD THE METHODS Mix_VolumeChunk(*it, volume) TO MODIFY THE VOLUME OF THE CHUNK AND WE ALSO ADD Mix_SetPosition(channel, angle, distance);
-		
-		Mix_PlayChannel(channel, *it, repeat);//put channel , if -1 gets the next free channel available
+		it = std::next(fx.begin(), id - 1);
+		Mix_PlayChannel(-1, *it, repeat);//put channel , if -1 gets the next free channel available
 	}
 
 	LOG("PLAYING WAV: %d", id);
 	return ret;
 }
 
-void j1Audio::PauseMusic()
+// UnLoad WAV
+bool j1Audio::UnLoadFx(uint id)
 {
-	Mix_PauseMusic();
-}
+	if (!active)
+		return true;
 
-void j1Audio::ResumeMusic()
-{
-	Mix_ResumeMusic();
-}
+	bool ret = false;
 
+	Mix_Chunk* chunk = NULL;
 
-void j1Audio::MusicPos(double second)
-{
-	Mix_SetMusicPosition(second);
-}
-
-void j1Audio::SetVolume(int channel, int volume)
-{
-	Mix_Volume(channel, volume);
-}
-
-
-
-int j1Audio::Channels(int num)
-{
-	return Mix_AllocateChannels(num);
-}
-
-int j1Audio::ChannelsPlaying(int num)
-{
-	return Mix_Playing(num);
-}
-
-void j1Audio::FadeOut(int ms)
-{
-	Mix_FadeOutMusic(ms);
-}
-
-void j1Audio::FadeIn(_Mix_Music* music, int loops, int ms)
-{
-	Mix_FadeInMusic(music, loops, ms);
-}
-
-int j1Audio::Decoders()
-{
-	return Mix_GetNumMusicDecoders();
-	
-}
-
-void j1Audio::ChangeTrack()
-{
-	
-	music = music_combat;
-}
-
-int j1Audio::StopFx(int channel)
-{
-	return Mix_HaltChannel(channel);
-}
-
-//TODO 3.3 :WE PASS TO SPATIAL: j2Entity* emiter & j2Entity* receiver, this will be the 2 entities that will interact with the sound, an fx, a channel and volume
-void j1Audio::Spatial()
-{
-	//TODO 4.1: WE ARE GOING TO CREATE THE ANGLE AND DISTANCE(USE Sint16 & Uint8), AND 3 AREAS(CLOSE, MEDIUM AND LONG),THIS AREAS SHOULD BE UINT.
-	//WE WILL ASIGNATE 250/1000/2000 TO THE AREAS(CLOSE, MEDIUM,LONG) AND WE WILL SET THE ANGLE AND DISTANCE TO 0.
-
-	
-	int repeat = 0;
-	
-
-	//TODO 4.2:  THIS ACTS AS A COMPASS TO THE PLAYER, THIS FIRST PACK GETS IF THE PLAYER IS MOVING TOWARDS THE ENEMY ENTITY FROM THE LEFT-LOW DIAGONAL.
-	//IF IT IS WE WANT TO CHANGE THE VALUE OF THE ANGLE TO  90deg(the sound will come from the right), A DISTANCE(10/120/230) DEPENDING OF THE AREA
-	//AND A VOLUME(128/50/10) DEPENDING OF THE AREA
-
-	//CLOSE AREA-MID AREA-LONG AREA ORDER
-	if (emiter->position.x - receiver->position.x <= close_area && receiver->position.y - emiter->position.y <= close_area)//diagonal izq-abajo
+	if (id > 0 && id <= fx.size())
 	{
-		angle = 90;
-		distance = 10;
-		volume = 128;
-		
+		std::list <Mix_Chunk*>::const_iterator it;
+		it = std::next(fx.begin(), id - 1);
+		chunk = *it;
 	}
-	else if (emiter->position.x - receiver->position.x <= medium_area && receiver->position.y - emiter->position.y <= medium_area)//diagonal izq-abajo
+	if (chunk != nullptr)
 	{
-		angle = 90;
-		distance = 120;
-		volume = 50;
-		
-	}
-	else if (emiter->position.x - receiver->position.x <= long_area && receiver->position.y - emiter->position.y <= long_area)//diagonal izq-abajo
-	{
-		angle = 90;
-		distance = 230;
-		volume = 10;
-		
+		Mix_FreeChunk(chunk);
+		chunk = nullptr;
+		ret = true;
 	}
 
-	if (receiver->position.x - emiter->position.x <= close_area && receiver->position.y - emiter->position.y <= close_area)//diagonal der-abajo
-	{
-		angle = 270;
-		distance = 10;
-		volume = 128;
-		
-	}
-	else if (receiver->position.x - emiter->position.x <= medium_area && receiver->position.y - emiter->position.y <= medium_area)//diagonal der-abajo
-	{
-		angle = 270;
-		distance = 120;
-		volume = 50;
-	
-	}
-	else if (receiver->position.x - emiter->position.x <= long_area && receiver->position.y - emiter->position.y <= long_area)//diagonal der-abajo
-	{
-		angle = 270;
-		distance = 230;
-		volume = 10;
-		
-	}
-
-	if (emiter->position.x - receiver->position.x <= close_area && emiter->position.y - receiver->position.y <= close_area)//diagonal izq-arriba
-	{
-		angle = 90;
-		distance = 10;
-		volume = 128;
-		
-	}
-	else if (emiter->position.x - receiver->position.x <= medium_area && emiter->position.y - receiver->position.y <= medium_area)//diagonal izq-arriba
-	{
-		angle = 90;
-		distance = 120;
-		volume = 50;
-		
-	}
-	else if (emiter->position.x - receiver->position.x <= long_area && emiter->position.y - receiver->position.y <= long_area)//diagonal izq-arriba
-	{
-		angle = 90;
-		distance = 230;
-		volume = 10;
-		
-	}
-
-	////TODO 4.3, SEEING HOW THE OTHER 3 DIAGONALS WORK, TRY TO  FIGURE OUT HOW TO DO THE LAST ONE(DIAGONAL FROM RIGHT TO UPWARDS)
-	if (receiver->position.x - emiter->position.x <= close_area && emiter->position.y - receiver->position.y <= close_area)//diagonal der-arriba
-	{
-		
-	}
-	else if (receiver->position.x - emiter->position.x <= medium_area && emiter->position.y - receiver->position.y <= medium_area)//diagonal der-arriba
-	{
-	
-		
-	}
-	else if (receiver->position.x - emiter->position.x <= long_area && emiter->position.y - receiver->position.y <= long_area)//diagonal der-arriba
-	{
-		
-		
-	}
-
-	
-	
-	
-	
-	//TODO 3.4 : WE CALL TO PlayFx()
-	
-	
-}
-
-int j1Audio::FxPosition(int channel, Sint16 angle, Uint8 distance)
-{
-	int ret = Mix_SetPosition(channel, angle, distance);
-	if (!Mix_SetPosition(channel, angle, distance)) {
-		printf("Mix_SetPosition: %s\n",Mix_GetError());
-		// no position effect, is it ok?
-	}
 	return ret;
+}
+
+bool j1Audio::PlaySpatialFx(uint id, uint channel_angle, uint distance,int repeat)
+{
+	bool ret = false;
+
+	if (!active)
+		return false;
+
+	Mix_Chunk* chunk = NULL;
+
+	if (id > 0 && id <= fx.size())
+	{
+		std::list <Mix_Chunk*>::const_iterator it;
+		it = std::next(fx.begin(), id - 1);
+		chunk = *it;
+	}
+	if (chunk != nullptr)
+	{
+		while (Mix_Playing(channel_angle) == 1)	// If the channel is already playing, choose the next channel that we already allocated with Mix_AllocateChannels()
+		{
+			channel_angle++;
+
+			if (channel_angle > 360)
+				channel_angle = 0;
+		}
+
+		// TODO 2 Set a channel in a position given a channel, an angle and a distance, There is SDL_Mixer function already explained 
+		// Play the channel that we already placed with Mix_SetPosition()
+
+
+		Mix_PlayChannel(channel_angle, chunk, repeat);				// Play the channel that we already placed with Mix_SetPosition()
+
+		ret = true;
+	}
+
+	return ret;
+}
+
+uint j1Audio::GetAngle(iPoint player_pos, iPoint enemy_pos)
+{
+	iPoint vector_pos = player_pos - enemy_pos;				// The vector of the player and enemy positions
+	iPoint vector_axis = { 0, 1 };							// We use the this vector because we want the angle that is formed with the Y axis
+
+	double dot_x = vector_axis.y * vector_pos.y;			// Product of the two vectors to get the X position
+	double det_y = -(vector_axis.y * vector_pos.x);			// Determinant of the two vectors to get the Y position
+
+	float f_angle = (atan2(det_y, dot_x)) * RAD_TO_DEG;		// Arc tangent of the previous X and Y, multiply the result with RAD_TO_DEG to get the result in degrees instead of radiants
+
+	if (f_angle < 0)										// If the angle is negative we add +360 because in PlaySpatialFx() we need the channel to be positive
+		f_angle += 360;
+
+	return uint(f_angle);
+}
+
+uint j1Audio::GetDistance(iPoint player_pos, iPoint enemy_pos)
+{
+	
+	// TODO 3 Calculate the distance between the player and the enemy passed by reference using pythagoras storing it in the variable given below
+	uint distance = 1;
+
+	uint distance_scaled = (distance * MAX_DISTANCE) / scale;										// We can scale the maximum hear distance by modifying scale in the config XML
+
+	if (distance_scaled > MAX_DISTANCE)																// If the distance is greater than the MAX_DISTANCE(255), keep it in 255
+		distance_scaled = MAX_DISTANCE;
+
+	return distance_scaled;
 }

@@ -31,6 +31,7 @@ Enemy::~Enemy()
 
 void Enemy::Update(float dt)
 {
+	// TODO 4 Once the key is pressed play the fx using PlaySpatialFx() 
 	if ((App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN ) && this->type == ENEMY1)
 		App->audio->PlaySpatialFx(level_up_fx, App->audio->GetAngle(App->entities->GetPlayer()->position, this->position), App->audio->GetDistance(App->entities->GetPlayer()->position, this->position));
 

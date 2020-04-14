@@ -11,7 +11,7 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="768" scale="1"/>
+    <resolution width="1280" height="800" scale="1"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -22,8 +22,9 @@
     <path>data.zip</path>
   </file_system>
 
-  <map>
-    <folder>maps/</folder>
-  </map>
+  <audio>
+     <music volume="50"/>
+     <distance scale="425"/>
+  </audio>
 
 </config>
