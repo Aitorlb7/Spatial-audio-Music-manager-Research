@@ -67,10 +67,19 @@ First of all we will take a look to those essential functions we must know about
 
 ## Exercises - TODO's
 
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO1.png)
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO2.png)
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO3.png)
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO4.png)
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO5.png)
-![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO6-7.png)
+Now that we have reviewed the functions and concepts we will use, we can start with the exercise. We will try to relate 2 entities(emitter and receiver) with an a fx. This fx will be assigned to the emitter, and the receiver(Player) will hear it different from a different direction and distance. We will also handle the music manager, and how to chain a playlist.
+
+### TODO 1
+Allocate the channels that we will use,to play the chunks later, we must have control of this chunks.
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO1.png?raw=true)
+
+### TODO 2
+Set a channel in a position given a channel, an angle and a distance, There is a SDL_Mixer function already explained 
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO2.png?raw=true)
+
+### TODO 3
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO3.png?raw=true)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO4.png?raw=true)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO5.png?raw=true)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO6-7.png?raw=true)
 
