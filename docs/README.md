@@ -28,35 +28,49 @@ In the first minute of this [video](https://www.youtube.com/watch?v=oVXFpbpNQDc)
 The music manager is a module or code structure selfmade that allow the developer to handle different audio inputs from several sources, load and erasing those fx's or audio at will. In this research we will be using j1Audio.h and j1Audio.cpp.
 In orther to follow the explanation it's recommended to take a look to the [SDL_Mixer documentation](https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer.pdf).
 
+## My approach and implementation
 
+Real spatial audio it's very hard to achieve with the resources available for this project, so here it is an approximate simulation of how spatial audio would work in a 2D environment.
+First of all we will take a look to those essential functions we must know about:
 
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/Audio_functions.png?raw=true)
 
+### Core SDL_Mixer
 
+- **Mix_Chunk**: Is the internal format for an audio chunk and where is stored the sample data, the length in bytesof that data, and the volume to use when mixing the sample.
 
-```markdown
-Syntax highlighted code block
+- **Mix_Music**: This is an opaque data type used for Music data. We will use it to store our music files
 
-# Header 1
-## Header 2
-### Header 3
+- **Channel**: Is where the chunk will be played.
 
-- Bulleted
-- List
+- **Mix_SetPosition**:This effect emulates a simple 3D audio effect. It’s not all that realistic, but it can help improve some level of realism. By giving it the angle and distance from the camera’s point of view, the effect pans and attenuates volumes.
 
-1. Numbered
-2. List
+- **Mix_PlayChannel**: Play chunk on the referenced channel, or if channel is -1, takes the first free unreserved channel. The sample will play for loops +1 number of times
 
-**Bold** and _Italic_ and `Code` text
+### Functions
 
-[Link](url) and ![Image](src)
-```
+- **LoadMusic**: In charge of storing into memory a given path to an audio, more specifically to the previously created list. Returns a pointer to the sample as a Mix_Music. NULL is returned on error
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+- **PlayMusic**: Given an id and a fade time, iterates the music list and plays the desired one.
 
-### Jekyll Themes
+- **LoadFx**: Store into the fx list the audio passed by reference. Returns a pointer to the sample as a Mix_Chunk. NULL is returned on error
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+- **PlayFx**: This function uses Mix_PlayChannel and given an id iterates the fx list and plays or even loops the fx.
 
-### Support or Contact
+- **UnloadFx**: This function will remove the fx from the list.
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+- **PlaySpatialFx**: Play a WAV simulating a 3D audio reciving an fx, a channel, an angle and a distance.
+
+- **GetAngle**: Calculate the angle with the atan2 given the Dot product and the determinant.
+
+- **GetDistance**: With this function we calculate the distance between the player and the entitie generating the sound.
+
+## Exercises - TODO's
+
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO1.png)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO2.png)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO3.png)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO4.png)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO5.png)
+![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO6-7.png)
+
