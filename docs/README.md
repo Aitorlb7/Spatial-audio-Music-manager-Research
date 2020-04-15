@@ -96,3 +96,16 @@ Iterate all the music audios stored in the list (already created in the header f
 Given the fade_time implement a fade in and fade out using Mix_Fade(Out/In)Music, take into account that for the next audio to start playing the last fading must be completed.
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO6-7.png?raw=true)
 
+
+## Documentation
+
+[Research Document](https://www.researchgate.net/publication/50208057_Spatial_sound_for_computer_games_and_virtual_reality)
+
+[Gamasutra](https://www.gamasutra.com/blogs/RobBridgett/20190619/344991/The_Positive_Future_of_Spatial_Audio_for_Games.php)
+
+[SDL_Mixer Doc](https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html)
+
+[GDC Conference](https://www.youtube.com/watch?v=L2Kckjq0Gcs)
+
+[Abey Road Studios](https://www.abbeyroad.com/for-creators1)
+
