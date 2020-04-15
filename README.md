@@ -10,7 +10,7 @@ Spatial audio and Music manager research with SDL_Mixer.
 
 On this research I prepared a code structure in C++, to play fx and audio spatially and chain a playlist with fading to swap between any desired music stored in a list. With a small graphical representation.
 
-You can download the release [here](https://github.com/Sersius/Audio-Research/releases/tag/0.1). In exercices folder you have the TODOs' to follow, and in full_code you have all the code implemented, inside there is a folder named Game with a solution if you don't want to open VS. You can follow the exercices in the web above.
+You can download the release [here](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/releases/tag/1.0). It contains all the TODO's inside the exercises folder, and the full code with the solutions.
 
 You can check the website [here](https://aitorlb7.github.io/Spatial-audio-Music-manager-Research/)
 
