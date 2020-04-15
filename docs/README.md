@@ -34,7 +34,7 @@ Real spatial audio it's very hard to achieve with the resources available for th
 First of all we will take a look to those essential functions we must know about:
 
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/Audio_functions.png?raw=true)
-
+*Module Audio header file*
 ### Core SDL_Mixer
 
 - **Mix_Chunk**: Is the internal format for an audio chunk and where is stored the sample data, the length in bytesof that data, and the volume to use when mixing the sample.
@@ -70,7 +70,7 @@ First of all we will take a look to those essential functions we must know about
 Now that we have reviewed the functions and concepts we will use, we can start with the exercise. We will try to relate 2 entities(emitter and receiver) with an a fx. This fx will be assigned to the emitter, and the receiver(Player) will hear it different from a different direction and distance. We will also handle the music manager, and how to chain a playlist.
 
 ### TODO 1
-Allocate the channels that we will use,to play the chunks later, we must have control of this chunks.
+Allocate those channels that we will use to play the chunks later, we must have control of this chunks.
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO1.png?raw=true)
 
 ### TODO 2
@@ -78,8 +78,34 @@ Set a channel in a position given a channel, an angle and a distance, There is a
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO2.png?raw=true)
 
 ### TODO 3
+Calculate the distance between the player and the enemy passed by reference using pythagoras
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO3.png?raw=true)
+
+### TODO 4
+Once the key is pressed play the fx using PlaySpatialFx() 
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO4.png?raw=true)
+
+### TODO 5
+Load the audio path given into a Mix_Music variable
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO5.png?raw=true)
+
+### TODO 6
+Iterate all the music audios stored in the list (already created in the header file)
+
+### TODO 7
+Given the fade_time implement a fade in and fade out using Mix_Fade(Out/In)Music, take into account that for the next audio to start playing the last fading must be completed.
 ![image](https://github.com/Aitorlb7/Spatial-audio-Music-manager-Research/blob/master/docs/images/TODO6-7.png?raw=true)
+
+
+## Documentation
+
+[Research Document](https://www.researchgate.net/publication/50208057_Spatial_sound_for_computer_games_and_virtual_reality)
+
+[Gamasutra](https://www.gamasutra.com/blogs/RobBridgett/20190619/344991/The_Positive_Future_of_Spatial_Audio_for_Games.php)
+
+[SDL_Mixer Doc](https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html)
+
+[GDC Conference](https://www.youtube.com/watch?v=L2Kckjq0Gcs)
+
+[Abey Road Studios](https://www.abbeyroad.com/for-creators1)
 
